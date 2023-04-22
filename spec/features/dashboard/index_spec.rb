@@ -45,6 +45,7 @@ RSpec.describe 'merchant dashboard' do
 
   it 'shows the merchant name' do
     expect(page).to have_content(@merchant1.name)
+    click_link 'Discounts'
   end
 
   it 'can see a link to my merchant items index' do
