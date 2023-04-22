@@ -1,0 +1,13 @@
+<h1>Create a New Discount</h1>
+
+<%= form_with model: [@merchant, @discount] do |form| %>
+  <%= form.label :percent, "Percentage Discount (%):" %>
+  <%= form.number_field :percent, step: 0.01 %>
+
+  <%= form.label :quantity, "Quantity Threshold:" %>
+  <%= form.number_field :quantity %>
+
+  <%= form.submit "Create Discount" %>
+<% end %>
+
+<%= link_to 'Back to Discounts', merchant_discounts_path(@merchant) %>

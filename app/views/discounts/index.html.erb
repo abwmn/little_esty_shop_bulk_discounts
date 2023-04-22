@@ -1,0 +1,23 @@
+<h1>My Discounts</h1>
+
+<table class="discounts">
+  <thead>
+    <tr>
+      <th>Percentage Discount</th>
+      <th>Quantity Threshold</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @discounts.each do |discount| %>
+      <tr>
+        <td><%= (discount.percent * 100).to_i %>%</td>
+        <td><%= discount.quantity %></td>
+        <td><%= link_to 'Show', merchant_discount_path(@merchant, discount) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Create a New Discount', new_merchant_discount_path(@merchant) %>
+<%= link_to 'Back to Dashboard', merchant_dashboard_index_path(@merchant) %>
