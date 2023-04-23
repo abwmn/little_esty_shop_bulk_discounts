@@ -11,7 +11,7 @@
   <tbody>
     <% @discounts.each do |discount| %>
       <tr>
-        <td><%= (discount.percent * 100).to_i %>%</td>
+        <td><%= discount.percent %>%</td>
         <td><%= discount.quantity %></td>
         <td><%= link_to 'Show', merchant_discount_path(@merchant, discount) %></td>
       </tr>

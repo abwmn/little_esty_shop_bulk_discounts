@@ -2,7 +2,7 @@
 
 <%= form_with model: [@merchant, @discount] do |form| %>
   <%= form.label :percent, "Percentage Discount (%):" %>
-  <%= form.number_field :percent, step: 0.01 %>
+  <%= form.number_field :percent, step: 1 %>
 
   <%= form.label :quantity, "Quantity Threshold:" %>
   <%= form.number_field :quantity %>

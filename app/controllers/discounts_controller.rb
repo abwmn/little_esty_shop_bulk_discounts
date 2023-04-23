@@ -10,6 +10,11 @@ class DiscountsController < ApplicationController
 
   def new
     @merchant = Merchant.find(params[:merchant_id])
+    @discount = @merchant.discounts.new
+  end
+
+  def create
+    @merchant = Merchant.find(params[:merchant_id])
     @discount = @merchant.discounts.new(discount_params)
     if @discount.save
       flash[:success] = "Discount created successfully."
@@ -18,11 +23,6 @@ class DiscountsController < ApplicationController
       flash[:error] = @discount.errors.full_messages.join(", ")
       render :new
     end
-  end
-
-  def create
-    @merchant = Merchant.find(params[:merchant_id])
-    @discount = @merchant.discounts.new
   end
 
   private
