@@ -8,9 +8,9 @@ RSpec.describe 'Merchant Bulk Discounts Index' do
     @merchant = Merchant.create!(name: 'Test Merchant')
 
     # Create test discounts for the merchant
-    @discount1 = @merchant.discounts.create!(percent: 0.1, quantity: 5)
-    @discount2 = @merchant.discounts.create!(percent: 0.2, quantity: 10)
-    @discount3 = @merchant.discounts.create!(percent: 0.3, quantity: 15)
+    @discount1 = @merchant.discounts.create!(percent: 10, quantity: 5)
+    @discount2 = @merchant.discounts.create!(percent: 20, quantity: 10)
+    @discount3 = @merchant.discounts.create!(percent: 30, quantity: 15)
   end
 
   it 'displays all my discounts with percentage and quantity thresholds' do
@@ -29,7 +29,7 @@ RSpec.describe 'Merchant Bulk Discounts Index' do
       expect(page).to have_content("Percentage Discount")
       expect(page).to have_content("Quantity Threshold")
       [@discount1, @discount2, @discount3].each do |discount|
-        expect(page).to have_content("#{(discount.percent*100).to_i}%")
+        expect(page).to have_content("#{discount.percent}%")
         expect(page).to have_content(discount.quantity)
         expect(page).to have_link('Show', href: merchant_discount_path(@merchant, discount))
       end
