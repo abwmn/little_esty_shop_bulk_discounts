@@ -1,0 +1,13 @@
+<h1>Edit Discount</h1>
+
+<%= form_with model: [@merchant, @discount] do |form| %>
+  <%= form.label :percent, "Percentage Discount (%):" %>
+  <%= form.number_field :percent, step: 1, value: @discount.percent %>
+
+  <%= form.label :quantity, "Quantity Threshold:" %>
+  <%= form.number_field :quantity, value: @discount.quantity %>
+
+  <%= form.submit "Update Discount" %>
+<% end %>
+
+<%= link_to 'Back to Discount', merchant_discount_path(@merchant, @discount) %>

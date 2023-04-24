@@ -26,6 +26,23 @@ class DiscountsController < ApplicationController
     end
   end
 
+  def edit
+    @merchant = Merchant.find(params[:merchant_id])
+    @discount = @merchant.discounts.find(params[:id])
+  end
+
+  def update
+    @merchant = Merchant.find(params[:merchant_id])
+    @discount = @merchant.discounts.find(params[:id])
+    if @discount.update(discount_params)
+      flash[:success] = "Discount updated successfully."
+      redirect_to merchant_discount_path(@merchant, @discount)
+    else
+      flash[:error] = @discount.errors.full_messages.join(", ")
+      render :edit
+    end
+  end
+
   def destroy
     discount = Discount.find(params[:id])
     discount.destroy
