@@ -10,7 +10,7 @@ RSpec.describe 'Merchant Bulk Discount Create' do
 
     click_link 'Discounts'
 
-    within(".discounts") do
+    within("#discounts") do
       expect(page).not_to have_content("15%")
       expect(page).not_to have_content("10")
     end
@@ -24,7 +24,7 @@ RSpec.describe 'Merchant Bulk Discount Create' do
 
     expect(current_path).to eq(merchant_discounts_path(@merchant))
 
-    within(".discounts") do
+    within("#discounts") do
       expect(page).to have_content("15%")
       expect(page).to have_content("10")
     end
