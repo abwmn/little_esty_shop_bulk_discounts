@@ -1,0 +1,8 @@
+<h1>Discount Details</h1>
+
+<p>
+  <strong>Percentage Discount:</strong> <%= @discount.percent %>%<br>
+  <strong>Quantity Threshold:</strong> <%= @discount.quantity %>
+</p>
+
+<%= link_to 'Back to Discounts', merchant_discounts_path(@merchant) %>

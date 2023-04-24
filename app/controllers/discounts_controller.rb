@@ -5,7 +5,8 @@ class DiscountsController < ApplicationController
   end
 
   def show
-    @discount = Discount.find(params[:id])
+    @merchant = Merchant.find(params[:merchant_id])
+    @discount = @merchant.discounts.find(params[:id])
   end
 
   def new
@@ -23,6 +24,13 @@ class DiscountsController < ApplicationController
       flash[:error] = @discount.errors.full_messages.join(", ")
       render :new
     end
+  end
+
+  def destroy
+    discount = Discount.find(params[:id])
+    discount.destroy
+    flash[:success] = "Discount deleted successfully."
+    redirect_to merchant_discounts_path(params[:merchant_id])
   end
 
   private
