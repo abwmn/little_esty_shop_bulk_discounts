@@ -30,7 +30,7 @@ RSpec.describe InvoiceItem, type: :model do
     @i4 = Invoice.create!(customer_id: @c3.id, status: 2)
     @i5 = Invoice.create!(customer_id: @c4.id, status: 2)
     @ii_1 = InvoiceItem.create!(invoice_id: @i1.id, item_id: @item_1.id, quantity: 1, unit_price: 10, status: 0)
-    @ii_2 = InvoiceItem.create!(invoice_id: @i1.id, item_id: @item_2.id, quantity: 1, unit_price: 8, status: 0)
+    @ii_2 = InvoiceItem.create!(invoice_id: @i1.id, item_id: @item_2.id, quantity: 15, unit_price: 8, status: 0)
     @ii_3 = InvoiceItem.create!(invoice_id: @i2.id, item_id: @item_3.id, quantity: 1, unit_price: 5, status: 2)
     @ii_4 = InvoiceItem.create!(invoice_id: @i3.id, item_id: @item_3.id, quantity: 1, unit_price: 5, status: 1)
     @discount1 = @m1.discounts.create!(percent: 20, quantity: 10)
@@ -45,17 +45,26 @@ RSpec.describe InvoiceItem, type: :model do
 
   describe "instance methods" do
     it 'applicable_discount' do
-      expect(@invoice_item.applicable_discount).to eq(@discount2)
+      expect(@ii_2.applicable_discount).to eq(@discount2)
 
-      @invoice_item.update(quantity: 5)
-      expect(@invoice_item.applicable_discount).to be_nil
+      @ii_2.update(quantity: 10)
+      expect(@ii_2.applicable_discount).to eq(@discount1)
+
+      @ii_2.update(quantity: 5)
+      expect(@ii_2.applicable_discount).to be_nil
     end
 
     it 'discounted_revenue' do
-      expect(@invoice_item.discounted_revenue).to eq(105.0)
+      base_revenue = @ii_2.quantity * @ii_2.unit_price
+      expect(@ii_2.discounted_revenue).to eq(base_revenue * 0.7)
 
-      @invoice_item.update(quantity: 5)
-      expect(@invoice_item.discounted_revenue).to eq(50.0)
+      @ii_2.update(quantity: 10)
+      base_revenue = @ii_2.quantity * @ii_2.unit_price
+      expect(@ii_2.discounted_revenue).to eq(base_revenue * 0.8)
+
+      @ii_2.update(quantity: 5)
+      base_revenue = @ii_2.quantity * @ii_2.unit_price
+      expect(@ii_2.discounted_revenue).to eq(base_revenue)
     end
   end
 end
