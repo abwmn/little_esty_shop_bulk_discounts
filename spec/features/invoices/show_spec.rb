@@ -43,6 +43,7 @@ RSpec.describe 'invoices show' do
     @ii_10 = InvoiceItem.create!(invoice_id: @invoice_8.id, item_id: @item_5.id, quantity: 1, unit_price: 1, status: 1)
     @ii_11 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_8.id, quantity: 12, unit_price: 6, status: 1)
     @ii_12 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_5.id, quantity: 12, unit_price: 6, status: 1)
+    @ii_13 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_4.id, quantity: 1, unit_price: 6, status: 2)
 
     @transaction1 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_1.id)
     @transaction2 = Transaction.create!(credit_card_number: 230948, result: 1, invoice_id: @invoice_2.id)
@@ -109,13 +110,28 @@ RSpec.describe 'invoices show' do
     visit merchant_invoice_path(@merchant1, @invoice_1)
 
     expect(page).to have_content("Total Revenue: #{@invoice_1.total_revenue}")
-    expect(@invoice_1.total_revenue).to eq(234)
+    expect(@invoice_1.total_revenue).to eq(240)
 
     within '#merchant-revenue' do
       expect(page).to have_content("Total Merchant Revenue: #{@invoice_1.merchant_total_revenue(@merchant1.id)}")
-      expect(@invoice_1.merchant_total_revenue(@merchant1.id)).to eq(162)
+      expect(@invoice_1.merchant_total_revenue(@merchant1.id)).to eq(168)
       expect(page).to have_content("Total Merchant Discounted Revenue: #{@invoice_1.merchant_discounted_revenue(@merchant1.id)}")
-      expect(@invoice_1.merchant_discounted_revenue(@merchant1.id)).to eq(150.3)
+      expect(@invoice_1.merchant_discounted_revenue(@merchant1.id)).to eq(156.3)
+    end
+  end
+
+  it 'shows a link to the applied discount for each invoice item (if any)' do
+    visit merchant_invoice_path(@merchant1, @invoice_1)
+
+    @invoice_1.invoice_items.each do |invoice_item| #includes items with no discount, discount1, and discount2
+      discount = invoice_item.applicable_discount
+      within "#the-status-#{invoice_item.id}" do
+        if discount
+          expect(page).to have_link("Discount #{discount.id}", href: merchant_discount_path(@merchant1, discount))
+        else
+          expect(page).to have_content("No discount applied")
+        end
+      end
     end
   end
 end
