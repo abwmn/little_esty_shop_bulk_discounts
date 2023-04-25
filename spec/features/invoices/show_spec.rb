@@ -42,6 +42,7 @@ RSpec.describe 'invoices show' do
     @ii_9 = InvoiceItem.create!(invoice_id: @invoice_7.id, item_id: @item_4.id, quantity: 1, unit_price: 1, status: 1)
     @ii_10 = InvoiceItem.create!(invoice_id: @invoice_8.id, item_id: @item_5.id, quantity: 1, unit_price: 1, status: 1)
     @ii_11 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_8.id, quantity: 12, unit_price: 6, status: 1)
+    @ii_12 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_5.id, quantity: 12, unit_price: 6, status: 1)
 
     @transaction1 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_1.id)
     @transaction2 = Transaction.create!(credit_card_number: 230948, result: 1, invoice_id: @invoice_2.id)
@@ -51,6 +52,10 @@ RSpec.describe 'invoices show' do
     @transaction6 = Transaction.create!(credit_card_number: 879799, result: 0, invoice_id: @invoice_6.id)
     @transaction7 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_7.id)
     @transaction8 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_8.id)
+
+    @discount1 = @merchant1.discounts.create!(quantity: 5, percent: 5)
+    @discount2 = @merchant1.discounts.create!(quantity: 10, percent: 10)
+    @discount3 = @merchant2.discounts.create!(quantity: 10, percent: 5)
   end
 
   it "shows the invoice information" do
@@ -100,4 +105,17 @@ RSpec.describe 'invoices show' do
      end
   end
 
+  it 'shows total revenue and discounted revenue for merchant' do
+    visit merchant_invoice_path(@merchant1, @invoice_1)
+
+    expect(page).to have_content("Total Revenue: #{@invoice_1.total_revenue}")
+    expect(@invoice_1.total_revenue).to eq(234)
+
+    within '#merchant-revenue' do
+      expect(page).to have_content("Total Merchant Revenue: #{@invoice_1.merchant_total_revenue(@merchant1.id)}")
+      expect(@invoice_1.merchant_total_revenue(@merchant1.id)).to eq(162)
+      expect(page).to have_content("Total Merchant Discounted Revenue: #{@invoice_1.merchant_discounted_revenue(@merchant1.id)}")
+      expect(@invoice_1.merchant_discounted_revenue(@merchant1.id)).to eq(150.3)
+    end
+  end
 end
