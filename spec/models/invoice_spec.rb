@@ -28,8 +28,44 @@ RSpec.describe Invoice, type: :model do
       @discount1 = @merchant1.discounts.create!(quantity: 5, percent: 5)
       @discount2 = @merchant1.discounts.create!(quantity:10, percent: 10)
     end
+    
     it "total_revenue" do
       expect(@invoice_1.total_revenue).to eq(282)
+    end
+
+    it "total_discounted_revenue" do
+      # Update the initial quantity of items to avoid discounts
+      @ii_1.update(quantity: 4)
+      @ii_2.update(quantity: 4)
+      @ii_1.reload
+      @ii_2.reload
+    
+      # No discounts applied (discounts can only apply to m1's items, ii_1, ii_2, and ii_11)
+      # 4 * 10 + 4 * 10 + 1 * 10 + 12 * 6 = 162
+      expect(@invoice_1.total_discounted_revenue).to eq(162)
+      expect(@invoice_1.total_discounted_revenue).to eq(@invoice_1.total_revenue)
+    
+      # Apply a 5% discount to @ii_1 
+      @ii_1.update(quantity: 5)
+      @ii_1.reload
+      @invoice_1.reload
+      # # 5 * 10 * 0.95 + 4 * 10 + 1 * 10 + 12 * 6 = 169.5
+      expect(@invoice_1.total_revenue).to eq(172)
+      expect(@invoice_1.total_discounted_revenue).to eq(169.5)
+    
+      # # Apply a 10% discount to @ii_2 
+      @ii_2.update(quantity: 10)
+      @ii_2.reload 
+      @invoice_1.reload
+      # 5 * 10 * 0.95 + 10 * 10 * 0.90 + 1 * 10 + 12 * 6 = 219.5
+      expect(@invoice_1.total_discounted_revenue).to eq(219.5)
+    
+      # Apply a 10% discount to both @ii_1 and @ii_2 
+      @ii_1.update(quantity: 10)
+      @ii_1.reload 
+      @invoice_1.reload
+      # 10 * 10 * 0.90 + 10 * 10 * 0.90 + 1 * 10 + 12 * 6 = 262
+      expect(@invoice_1.total_discounted_revenue).to eq(262)
     end
 
     it "merchant_total_revenue" do

@@ -17,6 +17,8 @@ describe 'Admin Invoices Show Page' do
     @ii_2 = InvoiceItem.create!(invoice_id: @i1.id, item_id: @item_2.id, quantity: 6, unit_price: 1, status: 1)
     @ii_3 = InvoiceItem.create!(invoice_id: @i2.id, item_id: @item_2.id, quantity: 87, unit_price: 12, status: 2)
 
+    @discount = @m1.discounts.create!(percent: 20, quantity: 10)
+
     visit admin_invoice_path(@i1)
   end
 
@@ -67,5 +69,11 @@ describe 'Admin Invoices Show Page' do
       expect(current_path).to eq(admin_invoice_path(@i1))
       expect(@i1.reload.status).to eq('cancelled')
     end
+  end
+
+  it 'should display total discounted revenue the invoice will generate' do
+    expect(page).to have_content("Total Discounted Revenue: $#{@i1.total_discounted_revenue}")
+
+    expect(page).to_not have_content(@i2.total_discounted_revenue)
   end
 end
