@@ -21,10 +21,16 @@ class Merchant < ApplicationRecord
   end
 
   def ordered_items_to_ship
-    item_ids = InvoiceItem.where("status = 0 OR status = 1").order(:created_at).pluck(:item_id)
-    item_ids.map do |id|
-      Item.find(id)
-    end
+    # item_ids = InvoiceItem.where("status = 0 OR status = 1").order(:created_at).pluck(:item_id)
+    # item_ids.map do |id|
+    #   Item.find(id)
+    # end
+    # this merchant instance method is querying the entire database for unshipped invoice items
+    # rather than starting with the merchant's items
+    items
+    .joins(:invoice_items)
+    .where('invoice_items.status != 2')
+    .order('invoice_items.created_at')
   end
 
   def top_5_items
