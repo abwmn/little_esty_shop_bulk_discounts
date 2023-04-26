@@ -1,0 +1,17 @@
+<html>
+<head>
+  <title>Landing Page</title>
+</head>
+<body>
+  <h1>Welcome to Little Esty Shop</h1>
+  <p>This is the landing page of the Little Esty Shop application.</p>
+  <nav>
+    <ul>
+      <li><%= link_to "Admin Dashboard Index", admin_dashboard_index_path %></li>
+      <% Merchant.limit(3).each do |merchant| %>
+        <li><%= link_to "#{merchant.name} Dashboard", merchant_dashboard_path(merchant) %></li>
+      <% end %>
+    </ul>
+  </nav>
+</body>
+</html>
