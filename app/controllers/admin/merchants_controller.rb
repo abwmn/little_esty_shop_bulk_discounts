@@ -2,8 +2,16 @@ class Admin::MerchantsController < ApplicationController
   before_action :set_merchant, only: [:show, :edit, :update]
   def index
     @merchants = Merchant.all
-    @enabled_merchants = Merchant.enabled
-    @disabled_merchants = Merchant.disabled
+    # @enabled_merchants = Merchant.enabled
+    # @disabled_merchants = Merchant.disabled
+    # speed up loading by filtering a single Merchant query
+    # @enabled_merchants = @merchants.select { |m| m.status == 'enabled'}
+    # @disabled_merchants = @merchants.select { |m| m.status == 'disabled'}
+    # speed up even more filtering @merchants just once
+    @enabled_merchants, @disabled_merchants = 
+      @merchants.partition do |merchant| 
+        merchant.status == 'enabled' 
+      end
   end
 
   def show
