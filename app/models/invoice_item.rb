@@ -21,9 +21,9 @@ class InvoiceItem < ApplicationRecord
     if discount
       discount_percentage = discount.percent.to_f / 100.0
       discounted_price = unit_price * (1 - discount_percentage)
-      quantity * discounted_price
+      return quantity * discounted_price
     else
-      quantity * unit_price
+      return quantity * unit_price
     end
   end
 
