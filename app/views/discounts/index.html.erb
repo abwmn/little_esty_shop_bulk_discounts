@@ -15,8 +15,7 @@
         <td><%= discount.percent %>%</td>
         <td><%= discount.quantity %></td>
         <td><%= link_to 'Show', merchant_discount_path(@merchant, discount) %></td>
-        <td><%= link_to 'Delete', merchant_discount_path(@merchant, discount), 
-                method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= button_to 'Delete', merchant_discount_path(@merchant, discount), method: :delete %></td>
       </tr>
     <% end %>
   </tbody>
