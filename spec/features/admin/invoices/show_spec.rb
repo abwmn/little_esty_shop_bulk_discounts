@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Admin Invoices Index Page' do
+describe 'Admin Invoices Show Page' do
   before :each do
     @m1 = Merchant.create!(name: 'Merchant 1')
 
@@ -64,9 +64,8 @@ describe 'Admin Invoices Index Page' do
       select('cancelled', :from => 'invoice[status]')
       expect(page).to have_button('Update Invoice')
       click_button 'Update Invoice'
-
       expect(current_path).to eq(admin_invoice_path(@i1))
-      expect(@i1.status).to eq('completed')
+      expect(@i1.reload.status).to eq('cancelled')
     end
   end
 end
