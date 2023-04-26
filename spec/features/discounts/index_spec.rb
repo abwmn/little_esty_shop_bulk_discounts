@@ -25,4 +25,17 @@ RSpec.describe 'Merchant Bulk Discounts Index' do
       end
     end
   end
+
+
+  it 'displays next 3 public holidays' do
+    visit merchant_discounts_path(@merchant)
+
+    expect(page).to have_content("Upcoming Holidays")
+
+    within('.holidays') do
+      expect('Memorial Day - 2023-05-29').to appear_before('Juneteenth - 2023-06-19')
+      expect('Juneteenth - 2023-06-19').to appear_before('Independence Day - 2023-07-04')
+      expect(page).not_to have_content('Labour Day - 2023-09-04')
+    end
+  end
 end
